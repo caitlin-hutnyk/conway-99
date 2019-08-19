@@ -5,9 +5,9 @@ import numpy as np
 
 # evaluate strong regularity (99,14,1,2)
 def eval(graph):
-	g = nx.adjacency_matrix(graph).todense()
+	g = nx.to_numpy_matrix(graph)
 	fitness = 0
-	for i in range(len(g)):
+	for i in range(99):
 		for j in range(i + 1, 99, 1):
 			count = 0
 			for c in range(99):
@@ -53,7 +53,7 @@ def reproduce(first, second):
 					full[i] += 1
 					full[j] += 1
 		if full[i] < 14:
-			raise Exception('Failed to reproduce') 
+			raise Exception('Failed to reproduce')
 	return nx.from_numpy_matrix(r)
 
 # verify 14-regularity
