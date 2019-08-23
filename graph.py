@@ -33,7 +33,6 @@ def reproduce(first, second):
 			if a[i,j] or b[i,j]:
 				poss.append(j)
 		random.shuffle(poss)
-		j = 0
 		for j in poss:
 			if full[i] >= 14:
 				break
@@ -42,6 +41,8 @@ def reproduce(first, second):
 				r[j,i] = 1
 				full[i] += 1
 				full[j] += 1
+	random.shuffle(l)
+	for i in l:
 		if full[i] < 14:
 			poss = list(set(range(99)).difference(set(poss)))
 			for j in poss:
@@ -52,9 +53,28 @@ def reproduce(first, second):
 					r[j,i] = 1
 					full[i] += 1
 					full[j] += 1
+	for i in l:	
 		if full[i] < 14:
 			raise Exception('Failed to reproduce')
 	return nx.from_numpy_matrix(r)
+
+# returns matrix with the number of common neighbours
+# for each pair of vertices
+def commonNeighbours(graph):
+	g = nx.to_numpy_matrix(graph)
+	r = np.zeros(shape=(99,99))
+
+	for i in range(99):
+		for j in range(i + 1, 99, 1):
+			for c in range(99):
+				if c == i or c == j:
+					continue
+				if g[i,c] and g[j,c]:
+					r[i,j] += 1
+					r[j,i] += 1
+
+	return r
+
 
 # verify 14-regularity
 def verify(g):
