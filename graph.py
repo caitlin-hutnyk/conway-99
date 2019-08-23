@@ -2,6 +2,7 @@ import random
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
+import datetime
 
 # evaluate strong regularity (99,14,1,2)
 def eval(graph):
@@ -17,6 +18,20 @@ def eval(graph):
 					count += 1
 			fitness -= abs(count - (1 if g[i,j] else 2))
 	return fitness
+
+# evaluate strong reularity (99,14,1,2)
+# but using a graph and its commonNeighbours matrix
+
+def evalMatrix(graph, neighbours):
+	result = 0
+	adj = nx.to_numpy_matrix(graph)
+	for i in range(99):
+		for j in range(i + 1, 99, 1):
+			if adj[i,j]:
+				result -= abs(neighbours[i,j] - 1)
+			else:
+				result -= abs(neighbours[i,j] - 2)
+	return result
 
 def reproduce(first, second):
 	a = nx.to_numpy_matrix(first)
@@ -75,7 +90,6 @@ def commonNeighbours(graph):
 
 	return r
 
-
 # verify 14-regularity
 def verify(g):
 	r = nx.degree_histogram(g)
@@ -84,28 +98,32 @@ def verify(g):
 	return False
 
 def test():
-	better = 0
-	worse = 0
-	fail = 0
-	for x in range(500):
+	same = 0
+	diff = 0
+	regularspeed = 0
+	newspeed = 0
+	for x in range(100):
 		a = nx.random_regular_graph(14, 99)
-		b = nx.random_regular_graph(14, 99)
+		start = datetime.datetime.now()
 		av = eval(a)
-		bv = eval(b)
+		finish = datetime.datetime.now()
+		regularspeed += (finish - start).total_seconds()
+		start = datetime.datetime.now()
+		bv = evalMatrix(a, commonNeighbours(a))
+		finish = datetime.datetime.now()
+		newspeed += (finish - start).total_seconds()
 
-		try:
-			r = reproduce(a,b)
-			rv = eval(b)
-			if rv > av and rv > bv:
-				better += 1
-			elif rv < av and rv < bv:
-				worse += 1
-		except:
-			fail += 1
+		if av == bv:
+			same += 1
+		else:
+			diff += 1
 	
-	print('better ' + str(better))
-	print('worse ' + str(worse))
-	print('fail ' + str(fail))
+	print('same ' + str(same))
+	print('diff ' + str(diff))
+	regularspeed /= 100
+	newspeed /= 100
+	print('regular ' + str(regularspeed))
+	print('new ' + str(newspeed))
 
 if __name__ == "__main__":
 	test()
