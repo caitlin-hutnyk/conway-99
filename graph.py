@@ -70,7 +70,7 @@ def reproduce(first, second):
 					full[j] += 1
 	for i in l:	
 		if full[i] < 14:
-			raise Exception('Failed to reproduce')
+			raise Exception('Failed to reproduce') 
 	return nx.from_numpy_matrix(r)
 
 # returns matrix with the number of common neighbours
@@ -90,6 +90,26 @@ def commonNeighbours(graph):
 
 	return r
 
+# find four vertices and swap the connection between them
+def mutate(graph):
+	g = nx.to_numpy_matrix(graph)
+	a = random.randint(0,98)
+	adj = list(filter(lambda j: g.item((a,j)) != 0, range(g.shape[0])))
+	b = random.choice(adj)
+	adj = list(filter(lambda i: i not in [a,b] and not g.item(a,i), range(g.shape[0])))
+	c = random.choice(adj)
+	adj = [j for j in range(0,99) if g[c,j] and not g[j,b]]
+	d = random.choice(adj)
+	g[a,b] = 0
+	g[b,a] = 0
+	g[c,d] = 0
+	g[d,c] = 0
+	g[a,c] = 1
+	g[c,a] = 1
+	g[b,d] = 1
+	g[d,b] = 1
+	return nx.from_numpy_matrix(g)
+
 # verify 14-regularity
 def verify(g):
 	r = nx.degree_histogram(g)
@@ -98,32 +118,20 @@ def verify(g):
 	return False
 
 def test():
-	same = 0
-	diff = 0
-	regularspeed = 0
-	newspeed = 0
-	for x in range(100):
-		a = nx.random_regular_graph(14, 99)
-		start = datetime.datetime.now()
+	better = 0
+	worse = 0
+	for i in range(100):
+		a = nx.random_regular_graph(14,99)
+		b = mutate(a)
 		av = eval(a)
-		finish = datetime.datetime.now()
-		regularspeed += (finish - start).total_seconds()
-		start = datetime.datetime.now()
-		bv = evalMatrix(a, commonNeighbours(a))
-		finish = datetime.datetime.now()
-		newspeed += (finish - start).total_seconds()
-
-		if av == bv:
-			same += 1
-		else:
-			diff += 1
-	
-	print('same ' + str(same))
-	print('diff ' + str(diff))
-	regularspeed /= 100
-	newspeed /= 100
-	print('regular ' + str(regularspeed))
-	print('new ' + str(newspeed))
+		bv = eval(b)
+		if av < bv:
+			better += 1
+		elif bv < av:
+			worse += 1
+		
+	print(better)
+	print(worse)
 
 if __name__ == "__main__":
 	test()
