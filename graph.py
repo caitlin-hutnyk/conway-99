@@ -117,6 +117,23 @@ def verify(g):
 		return True
 	return False
 
+# randomly populate the rest of the edges of a partial graph
+# while keeping the regularity condition
+def populate(g):
+	left = 693 - len(g.edges)
+
+	while left > 0:
+		poss = list(filter(lambda x: g.degree[x] < 14, list(range(99))))
+		[i,j] = random.sample(poss, 2)
+		if g.has_edge(i,j):
+			if len(poss) == 2:
+				raise Exception("Failed to populate")
+			continue
+		g.add_edge(i,j)
+		left -= 1
+
+	return g
+
 def test():
 	better = 0
 	worse = 0
