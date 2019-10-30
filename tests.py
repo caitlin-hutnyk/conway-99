@@ -5,6 +5,31 @@ import numpy as np
 import graph
 import pickle
 
+'''
+def addTriangle(graph):
+    g = nx.to_numpy_matrix(graph)
+    full = [0]*99
+    for i in range(99):
+        for j in range(99):
+            if g[i,j]:
+                full[i] += 1
+    poss = list(range(99)).filter(lambda x: full[x] != 14)
+    random.shuffle(poss)
+    # find the first two edges
+    a,b
+    for i in range(len(poss)):
+        for j in range(i + 1, len(poss)):
+            a = poss[i]
+            b = poss[j]
+            if g[a,b]:
+                continue
+            c_a = [n for n in graph.neighbours(a)]
+            c_b = [n for n in graph.neighbours(b)]
+            if bool(set(c_a) & set(c_b)):
+                continue
+            
+            for k in range(j + 1, len(poss)):
+
 def allPaired():
     # 97 and 98 are the two special vertices which will be saturated
     # 0-6 are the full vertcies which we append
@@ -29,20 +54,36 @@ def allPaired():
 
     # vertices that still need to be populated:
     # 7-96
-    # number of edges still to be added: 693 - 147 = 546
+    # number of edges still to be added: 693 - 147 = 546 (182 triangles)
     return g
 
-def main():
-    g = allPaired()
-    g = graph.populate(g)
-    e = graph.eval(g)
-    if e > -1000:
-        with open('luckygraph.pickle', 'wb') as f:
-                pickle.dump(g, f, protocol=pickle.HIGHEST_PROTOCOL)
-    print(e)
+'''
 
-    nx.draw(g)
-    plt.show()
+def main():
+    success = 0
+    failed = 0
+
+    for i in range(100):
+        print(str(i))
+        a = nx.random_regular_graph(14,99)
+        b = nx.random_regular_graph(14,99)
+
+        av = graph.eval(a)
+        bv = graph.eval(b)
+
+        # graph.split_reproduce(a, b, av, bv)
+
+        for j in range(5):
+            try:
+                graph.split_reproduce(a,b, av, bv)
+            except Exception as e:
+                # print(e)
+                failed += 1
+            else:
+                success += 1
+
+    print('success' + str(success))
+    print('fail' + str(failed))
 
 if __name__ == "__main__":
     main()

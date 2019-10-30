@@ -73,6 +73,105 @@ def reproduce(first, second):
 			raise Exception('Failed to reproduce') 
 	return nx.from_numpy_matrix(r)
 
+# scale split distrubution by fitness difference fe-se
+def split_reproduce(first, second, fe, se):
+	a = nx.to_numpy_matrix(first);
+	b = nx.to_numpy_matrix(second);
+	r = np.zeros(shape=(99,99))
+	diff = fe - se
+
+	# scale difference to range 0-33
+	diff = -1 * diff / 500 * 33
+
+	# generate random normal number 
+	split = int(np.random.normal(49 + diff, 5))
+	# print(split)
+
+	# tracks degree of each vertex in r
+	full = [0]*99
+
+	for i in range(split):
+		for j in range(i + 1, split):
+			if r[i,j]:
+				continue
+			if a[i,j]:
+				r[i,j] = 1
+				r[j,i] = 1
+
+				full[i] += 1
+				full[j] += 1
+
+	for i in range(split,99):
+		for j in range(i + 1,99):
+			if r[i,j]:
+				continue
+			if b[i,j]:
+				r[i,j] = 1
+				r[j,i] = 1
+				full[i] += 1
+				full[j] += 1
+
+	l = list(range(99))
+	random.shuffle(l)
+
+	# populate cut edges from parent cut edges
+	for i in l:
+		poss = []
+		temp_range = range(0,split) if i >= split else range(split,99) 
+		for j in temp_range:
+			if a[i,j] or b[i,j]:
+				poss.append(j)
+		random.shuffle(poss)
+		for j in poss:
+			if full[i] >= 14:
+				break
+			if (not r[i,j]) and full[j] < 14:
+				r[i,j] = 1
+				r[j,i] = 1
+				full[i] += 1
+				full[j] += 1
+
+	# populate with edges across the cut
+	random.shuffle(l)
+	l = list(filter(lambda x: full[x] < 14, l))
+
+	for i in l:
+		poss = []
+		if i < split:
+			poss = list(filter(lambda x: full[x] < 14, list(range(split,99))))
+		else:
+			poss = list(filter(lambda x: full[x] < 14, list(range(split))))
+		for j in poss:
+			if full[i] >= 14:
+				break
+			if (not r[i,j]) and full[j] < 14:
+				r[i,j] = 1
+				r[j,i] = 1
+				full[i] += 1
+				full[j] += 1
+
+	# populate with edges not across the cut
+	random.shuffle(l)
+	l = list(filter(lambda x: full[x] < 14, l))
+
+	for i in l:
+		poss = list(filter(lambda x: full[x] < 14, list(range(split,99))))
+		for j in poss:
+			if full[i] >= 14:
+				break
+			if (not r[i,j]) and full[j] < 14:
+				r[i,j] = 1
+				r[j,i] = 1
+				full[i] += 1
+				full[j] += 1
+
+	for i in l:
+		if full[i] < 14:
+			raise Exception('Failed to reproduce')
+
+	return nx.from_numpy_matrix(r)
+
+
 # returns matrix with the number of common neighbours
 # for each pair of vertices
 def commonNeighbours(graph):
