@@ -67,7 +67,7 @@ def reproduce(first, second):
 					r[j,i] = 1
 					full[i] += 1
 					full[j] += 1
-	for i in l:	
+	for i in range(99):	
 		if full[i] < 14:
 			raise Exception('Failed to reproduce') 
 	return nx.from_numpy_matrix(r)
@@ -172,7 +172,7 @@ def split_reproduce(first, second, fe, se):
 				break
 			if r[i,j]:
 				raise Exception('Failed to reproduce')
-				
+
 		r[i,j] = 1
 		r[j,i] = 1
 		left.remove(i)

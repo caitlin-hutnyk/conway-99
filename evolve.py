@@ -23,9 +23,9 @@ def generation(graphs):
 			a = temp[i][0]
 			b = temp[i+1][0]
 			fail = 0
-			while fail < 9:
+			while fail < 5:
 				try:
-					x = graph.reproduce(a,b)
+					x = graph.split_reproduce(a,b, temp[i][1], temp[i+1][1])
 					n.append((x, graph.eval(x)))
 					break
 				except:
@@ -35,6 +35,7 @@ def generation(graphs):
 						b = graph.mutate(b)
 			if fail == 9:
 				x = a if graph.eval(a) > graph.eval(b) else b
+				x = graph.mutate(graph.mutate(x))
 				x = graph.mutate(graph.mutate(x))
 				n.append((x, graph.eval(x)))
 	n = sorted(n, key = lambda g : - g[1])

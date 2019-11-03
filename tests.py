@@ -64,7 +64,7 @@ def main():
     failed = 0
     not_random = 0
 
-    for i in range(100):
+    for i in range(50):
         print(str(i))
         a = nx.random_regular_graph(14,99)
         b = nx.random_regular_graph(14,99)
@@ -76,7 +76,7 @@ def main():
 
         for j in range(5):
             try:
-                x = graph.split_reproduce(a,b, av, bv)
+                x = graph.reproduce(a,b)
             except Exception as e:
                 # print(e)
                 failed += 1
