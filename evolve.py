@@ -22,10 +22,12 @@ def generation(graphs):
 		for i in range(0,30,2):
 			a = temp[i][0]
 			b = temp[i+1][0]
+			av = temp[i][1]
+			bv = temp[i+1][1]
 			fail = 0
-			while fail < 5:
+			while fail < 7:
 				try:
-					x = graph.split_reproduce(a,b, temp[i][1], temp[i+1][1])
+					x = graph.split_reproduce(a,b, av, bv)
 					n.append((x, graph.eval(x)))
 					break
 				except:
@@ -33,12 +35,15 @@ def generation(graphs):
 					if fail % 3 == 0:
 						a = graph.mutate(a)
 						b = graph.mutate(b)
-			if fail == 9:
-				x = a if graph.eval(a) > graph.eval(b) else b
+						av = graph.eval(a)
+						bv = graph.eval(b)
+			if fail == 7:
+				x = a if av > bv else b
 				x = graph.mutate(graph.mutate(x))
 				x = graph.mutate(graph.mutate(x))
 				n.append((x, graph.eval(x)))
 	n = sorted(n, key = lambda g : - g[1])
+	print('gen length: ' + str(len(n)))
 	return n
 
 def run(gens):
