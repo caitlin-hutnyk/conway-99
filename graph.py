@@ -21,7 +21,6 @@ def eval(graph):
 
 # evaluate strong reularity (99,14,1,2)
 # but using a graph and its commonNeighbours matrix
-
 def evalMatrix(graph, neighbours):
 	result = 0
 	adj = nx.to_numpy_matrix(graph)
@@ -90,6 +89,7 @@ def split_reproduce(first, second, fe, se):
 	# tracks degree of each vertex in r
 	full = [0]*99
 
+	# copy the edges from each side of the cut
 	for i in range(split):
 		for j in range(i + 1, split):
 			if r[i,j]:
@@ -131,7 +131,7 @@ def split_reproduce(first, second, fe, se):
 				full[i] += 1
 				full[j] += 1
 
-	# populate with edges across the cut
+	# populate with other edges across the cut
 	random.shuffle(l)
 	l = list(filter(lambda x: full[x] < 14, l))
 
@@ -165,8 +165,8 @@ def split_reproduce(first, second, fe, se):
 				full[i] += 1
 				full[j] += 1
 
-	for i in l:
-		if full[i] < 14:
+	for i in full:
+		if i != 14:
 			raise Exception('Failed to reproduce')
 
 	return nx.from_numpy_matrix(r)

@@ -62,6 +62,7 @@ def allPaired():
 def main():
     success = 0
     failed = 0
+    not_random = 0
 
     for i in range(100):
         print(str(i))
@@ -75,15 +76,19 @@ def main():
 
         for j in range(5):
             try:
-                graph.split_reproduce(a,b, av, bv)
+                x = graph.split_reproduce(a,b, av, bv)
             except Exception as e:
                 # print(e)
                 failed += 1
             else:
-                success += 1
+                if graph.verify(x):
+                    success += 1
+                else:
+                    not_random += 1
 
-    print('success' + str(success))
-    print('fail' + str(failed))
+    print('success ' + str(success))
+    print('fail ' + str(failed))
+    print('non-random ' + str(not_random))
 
 if __name__ == "__main__":
     main()
