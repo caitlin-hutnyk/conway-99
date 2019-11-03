@@ -151,23 +151,32 @@ def split_reproduce(first, second, fe, se):
 				full[j] += 1
 
 	# populate with edges not across the cut
-	random.shuffle(l)
-	l = list(filter(lambda x: full[x] < 14, l))
+	left = []
+	for i in range(99):
+		if full[i] < 14:
+			for j in range(14-full[i]):
+				left.append(i)
 
-	for i in l:
-		poss = list(filter(lambda x: full[x] < 14, list(range(split,99))))
-		for j in poss:
-			if full[i] >= 14:
-				break
-			if (not r[i,j]) and full[j] < 14:
-				r[i,j] = 1
-				r[j,i] = 1
-				full[i] += 1
-				full[j] += 1
-
-	for i in full:
-		if i != 14:
+	while(len(left) > 0):
+		if len(set(left)) == 1:
 			raise Exception('Failed to reproduce')
+		i = random.choice(list(set(left)))
+		j = random.choice(list(set(left) - {i}))
+		if r[i,j]:
+			if len(list(set(left))) == 2:
+				raise Exception('Failed to reproduce')
+			for t in range(len(set(left))):
+				j = random.choice(list(set(left) - {i}))
+				if r[i,j]:
+					continue
+				break
+			if r[i,j]:
+				raise Exception('Failed to reproduce')
+				
+		r[i,j] = 1
+		r[j,i] = 1
+		left.remove(i)
+		left.remove(j)
 
 	return nx.from_numpy_matrix(r)
 
