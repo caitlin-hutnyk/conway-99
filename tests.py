@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import graph
 import pickle
+import sim_anneal
 
 '''
 def addTriangle(graph):
@@ -60,35 +61,15 @@ def allPaired():
 '''
 
 def main():
-    success = 0
-    failed = 0
-    not_random = 0
-
-    for i in range(50):
-        print(str(i))
-        a = nx.random_regular_graph(14,99)
-        b = nx.random_regular_graph(14,99)
-
-        av = graph.eval(a)
-        bv = graph.eval(b)
-
-        # graph.split_reproduce(a, b, av, bv)
-
-        for j in range(5):
-            try:
-                x = graph.reproduce(a,b)
-            except Exception as e:
-                # print(e)
-                failed += 1
-            else:
-                if graph.verify(x):
-                    success += 1
-                else:
-                    not_random += 1
-
-    print('success ' + str(success))
-    print('fail ' + str(failed))
-    print('non-random ' + str(not_random))
+    g = nx.Graph()
+    g.add_nodes_from(list(range(10)))
+    for i in range(0,9,2):
+        g.add_edge(i, i+1)
+    nx.draw(g, with_labels = True)
+    plt.show()
+    g = sim_anneal.step(g,5)
+    nx.draw(g, with_labels = True)
+    plt.show()
 
 if __name__ == "__main__":
     main()
