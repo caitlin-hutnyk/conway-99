@@ -3,6 +3,7 @@ import random
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
+import math
 
 SIZE = 99
 
@@ -19,13 +20,18 @@ def step(graph, n):
 	poss = list(range(SIZE))
 	a = random.choice(poss)
 
-	poss = list(filter(lambda j: g[j,a] and j != a, poss))
+	poss = list(filter(
+		lambda j: g[j,a] and j != a, poss))
 	b = random.choice(poss)
 
-	poss = list(filter(lambda j: j != a and j != b and not g[a,j] and not g[b,j], list(range(SIZE))))
+	poss = list(filter(
+		lambda j: j != a and j != b and not g[a,j] and not g[b,j], 
+		list(range(SIZE))))
 	c = random.choice(poss)
 
-	poss = list(filter(lambda j: not g[a,j] and not g[b,j] and not j == c and g[c,j], poss))
+	poss = list(filter(
+		lambda j: not g[a,j] and not g[b,j] and not j == c and g[c,j], 
+		poss))
 	d = random.choice(poss)
 
 	if n > 2:
@@ -81,10 +87,11 @@ def step(graph, n):
 	return nx.from_numpy_matrix(g)
 
 # run simulated annealing on a single graph g
-# T is the initial temperature
-# FT is the final temperature
+# t is the initial temperature
+# f is the final temperature
 # a is alpha, the cooling ratio
-# s is the n parameter for the step function: how many disjoint pairs to pick when stepping
+# s is the n parameter for the step function: 
+# how many disjoint pairs to pick when stepping
 def sim_anneal(g, t, ft, a, s):
 	while t >= ft:
 		gs = step(g, s)
@@ -92,6 +99,7 @@ def sim_anneal(g, t, ft, a, s):
 		if d < 0:
 			g = gs
 		else:
-			if random.random() < exp(-d / t)
+			if random.random() < math.exp(-1 * d / t):
+				g = gs
 		t = a*t
 	return g

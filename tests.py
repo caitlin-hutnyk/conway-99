@@ -5,6 +5,7 @@ import numpy as np
 import graph
 import pickle
 import sim_anneal
+import time
 
 '''
 def addTriangle(graph):
@@ -61,18 +62,27 @@ def allPaired():
 '''
 
 def main():
-    yes = 0
-    no = 0
-    for i in range(100):
+    better = 0
+    worse = 0
+    avg = 0
+    for i in range(10):
+        print(i)
         g = nx.random_regular_graph(14,99)
-        g = graph.mutate(g)
-        if graph.verify(g):
-            yes += 1
+        before = graph.eval(g)
+        start_time = time.time()
+        g = sim_anneal.sim_anneal(g, 15, 10, 0.98, 3)
+        t = time.time() - start_time
+        avg += t
+        if graph.eval(g) > before:
+            better += 1
         else:
-            no += 1
+            worse += 1
 
-    print(yes)
-    print(no)
+    avg /= 10
+
+    print(better)
+    print(worse)
+    print(avg)
 
 if __name__ == "__main__":
     main()

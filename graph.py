@@ -204,7 +204,9 @@ def mutate(graph):
 	a = random.randint(0,98)
 	adj = list(filter(lambda j: g.item((a,j)) != 0, range(g.shape[0])))
 	b = random.choice(adj)
-	adj = list(filter(lambda i: i not in [a,b] and not g.item(a,i), range(g.shape[0])))
+	adj = list(filter(
+		lambda i: i not in [a,b] and not g.item(a,i), 
+		range(g.shape[0])))
 	c = random.choice(adj)
 	adj = [j for j in range(0,99) if g[c,j] and not g[j,b]]
 	d = random.choice(adj)
