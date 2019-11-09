@@ -61,15 +61,18 @@ def allPaired():
 '''
 
 def main():
-    g = nx.Graph()
-    g.add_nodes_from(list(range(10)))
-    for i in range(0,9,2):
-        g.add_edge(i, i+1)
-    nx.draw(g, with_labels = True)
-    plt.show()
-    g = sim_anneal.step(g,5)
-    nx.draw(g, with_labels = True)
-    plt.show()
+    yes = 0
+    no = 0
+    for i in range(100):
+        g = nx.random_regular_graph(14,99)
+        g = graph.mutate(g)
+        if graph.verify(g):
+            yes += 1
+        else:
+            no += 1
+
+    print(yes)
+    print(no)
 
 if __name__ == "__main__":
     main()
