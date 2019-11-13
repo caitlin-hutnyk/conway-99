@@ -93,13 +93,16 @@ def step(graph, n):
 # s is the n parameter for the step function: 
 # how many disjoint pairs to pick when stepping
 def sim_anneal(g, t, ft, a, s):
+	val = graph.eval(g)
 	while t >= ft:
 		gs = step(g, s)
-		d = graph.eval(gs) - graph.eval(g)
+		d = graph.eval(gs) - val
 		if d < 0:
 			g = gs
+			val = val + d
 		else:
 			if random.random() < math.exp(-1 * d / t):
 				g = gs
+				val += d
 		t = a*t
 	return g
