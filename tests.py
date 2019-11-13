@@ -62,27 +62,11 @@ def allPaired():
 '''
 
 def main():
-    better = 0
-    worse = 0
-    avg = 0
-    for i in range(10):
-        print(i)
+    i = 0.995
+    while i >= 0.94:
         g = nx.random_regular_graph(14,99)
-        before = graph.eval(g)
-        start_time = time.time()
-        g = sim_anneal.sim_anneal(g, 15, 10, 0.98, 3)
-        t = time.time() - start_time
-        avg += t
-        if graph.eval(g) > before:
-            better += 1
-        else:
-            worse += 1
-
-    avg /= 10
-
-    print(better)
-    print(worse)
-    print(avg)
+        g = sim_anneal.sim_anneal(g, 60, 2, 0.95, 2, i)
+        i -= 0.005
 
 if __name__ == "__main__":
     main()
