@@ -61,12 +61,68 @@ def allPaired():
 
 '''
 
-def main():
-    i = 0.995
-    while i >= 0.94:
+def gaptest():
+    two = 0
+    three = 0
+    four = 0
+    five = 0
+    for i in range(100):
         g = nx.random_regular_graph(14,99)
-        g = sim_anneal.sim_anneal(g, 60, 2, 0.95, 2, i)
-        i -= 0.005
+        gv = graph.eval(g)
+        t = sim_anneal.step(g.copy(), 2)
+        two += abs(gv - graph.eval(t))
+        t = sim_anneal.step(g.copy(), 3)
+        three += abs(gv - graph.eval(t))
+        t = sim_anneal.step(g.copy(), 4)
+        four += abs(gv - graph.eval(t))
+        t = sim_anneal.step(g.copy(), 4)
+        five += abs(gv - graph.eval(t))
+    two /= 100
+    three /= 100
+    four /= 100
+    five /= 100
+
+    print(two)
+    print(three)
+    print(four)
+    print(five)
+
+
+def main():
+    i = 0.98
+    while i >= 0.90:
+        values = []
+        for j in range(10):
+            print(j)
+            g = nx.random_regular_graph(14,99)
+            g, t = sim_anneal.sim_anneal(g, 80, 3, i, 3)
+            values.append(t)
+        avg = []
+        times = []
+        # print(values)
+        for a in values:
+            for j in range(len(a)):
+                if len(avg) <= j:
+                    avg.append(a[j])
+                    times.append(1)
+                else:
+                    avg[j] += a[j]
+                    times[j] += 1
+        for j in range(len(avg)):
+            avg[j] /= times[j]
+        for j in values:
+            plt.plot(list(range(len(j))), j)
+        plt.ylabel('fitness')
+        plt.xlabel('steps')
+        plt.savefig('sim_anneal_tests/' + str(i) + '-all.png')
+        plt.close()
+        plt.plot(list(range(len(avg))), avg)
+        plt.ylabel('fitness')
+        plt.xlabel('steps')
+        plt.savefig('sim_anneal_tests/' + str(i) + '-avg.png')
+        plt.close()
+        print(i)
+        i -= 0.01
 
 if __name__ == "__main__":
-    main()
+    gaptest()   
