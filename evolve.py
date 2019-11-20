@@ -6,6 +6,43 @@ import pickle
 import numpy as np
 
 # graphs is a list of tuples (graph, fitness)
+# 80 3 2 0.93, run 200 gens
+# graph the number of graphs maintained from Gn to Gn+1 over the generations
+# possibly reduce population size? (they use 40 and 20)
+def run_2(gens, size):
+	pop = []
+	for i in range(size):
+		g = nx.random_regular_graph(14,99)
+		g = sim_anneal.sim_anneal(g, 80, 3, 2, 0.98)
+		pop.append((g, graph.eval(g)))
+	pop = sorted(pop, key = lambda g : - g[1])
+	avgFitness = []
+	bestFitness = []
+	for gen in range(gens):
+		print('running generation ' + str(gens))
+		print('top two: ' + str(pop[0][1]) + ', ' str(pop[1][1]))
+
+		avg = 0
+		for g in pop:
+			avg += g[1] / size
+
+		print('average fitness: ' + str(avg))
+		print('\n \n')
+
+		avgFitness.append(avg)
+		bestFitness.append(pop[0][1])
+
+		temp_pop = []
+		while len(temp_pop) < size:
+			a = random.choice(pop)
+			b = random.choice(pop)
+			c = graph.split_reproduce(a[0], b[0], a[1], b[1])
+			c = sim_anneal.sim_anneal(c, 80, 3, 2, 0.98)
+			temp_pop.append((c, graph.eval(c)))
+		temp_pop.append(pop)
+		temp_pop = sorted(temp_pop, key = lambda g : - g[1])
+		pop = temp_pop[:40]
+
 def generation(graphs):
 	n = []
 	for g in graphs[:10]:
@@ -84,4 +121,4 @@ def run(gens):
 	plt.show()
 	
 if __name__ == "__main__":
-	run(1000)
+	run_2(200, 40)

@@ -61,6 +61,12 @@ def allPaired():
 
 '''
 
+'''
+10.06
+11.82
+12.62
+14.62
+'''
 def gaptest():
     two = 0
     three = 0
