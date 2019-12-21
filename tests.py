@@ -101,7 +101,7 @@ def main():
         for j in range(10):
             print(j)
             g = nx.random_regular_graph(14,99)
-            g, t = sim_anneal.sim_anneal(g, 80, 3, i, 3)
+            g, t = sim_anneal.sim_anneal(g, 80, 3, i, 3, True)
             values.append(t)
         avg = []
         times = []

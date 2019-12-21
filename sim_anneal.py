@@ -92,7 +92,8 @@ def step(graph, n):
 # a is alpha, the cooling ratio
 # s is the n parameter for the step function: 
 # how many disjoint pairs to pick when stepping
-def sim_anneal(g, t, ft, a, s):
+# testing is a boolean to say whether to return the values array
+def sim_anneal(g, t, ft, a, s, testing):
 	val = graph.eval(g)
 	values = [val]
 	while t >= ft:
@@ -111,4 +112,6 @@ def sim_anneal(g, t, ft, a, s):
 		values.append(val)
 		t = a*t
 
-	return (g, values)
+	if testing:
+		return (g,values)
+	return g

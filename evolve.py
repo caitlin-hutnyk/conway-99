@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 import graph
 import pickle
 import numpy as np
+import sim_anneal
 
 # graphs is a list of tuples (graph, fitness)
 # 80 3 2 0.93, run 200 gens
@@ -13,14 +14,14 @@ def run_2(gens, size):
 	pop = []
 	for i in range(size):
 		g = nx.random_regular_graph(14,99)
-		g = sim_anneal.sim_anneal(g, 80, 3, 2, 0.98)
+		g = sim_anneal.sim_anneal(g, 80, 3, 0.98, 2, False)
 		pop.append((g, graph.eval(g)))
 	pop = sorted(pop, key = lambda g : - g[1])
 	avgFitness = []
 	bestFitness = []
 	for gen in range(gens):
-		print('running generation ' + str(gens))
-		print('top two: ' + str(pop[0][1]) + ', ' str(pop[1][1]))
+		print('running generation ' + str(gen))
+		print('top two: ' + str(pop[0][1]) + ', ' + str(pop[1][1]))
 
 		avg = 0
 		for g in pop:
@@ -36,10 +37,13 @@ def run_2(gens, size):
 		while len(temp_pop) < size:
 			a = random.choice(pop)
 			b = random.choice(pop)
-			c = graph.split_reproduce(a[0], b[0], a[1], b[1])
-			c = sim_anneal.sim_anneal(c, 80, 3, 2, 0.98)
-			temp_pop.append((c, graph.eval(c)))
-		temp_pop.append(pop)
+			try:
+				c = graph.split_reproduce(a[0], b[0], a[1], b[1])
+				c = sim_anneal.sim_anneal(c, 80, 3, 0.98, 2, False)
+				temp_pop.append((c, graph.eval(c)))
+			except:
+				continue
+		temp_pop.extend(pop)
 		temp_pop = sorted(temp_pop, key = lambda g : - g[1])
 		pop = temp_pop[:40]
 

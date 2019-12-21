@@ -4,20 +4,33 @@ import networkx as nx
 import numpy as np
 import datetime
 
+SIZE = 99
+DEG = 14
+A = 1
+C = 2
+
 # evaluate strong regularity (99,14,1,2)
 def eval(graph):
 	g = nx.to_numpy_matrix(graph)
 	fitness = 0
-	for i in range(99):
-		for j in range(i + 1, 99, 1):
+	for i in range(SIZE):
+		for j in range(SIZE):
 			count = 0
-			for c in range(99):
-				if c == i or c == j:
-					continue
+			for c in range(SIZE):
 				if g[i,c] and g[j,c]:
 					count += 1
-			fitness -= abs(count - (1 if g[i,j] else 2))
-	return fitness
+			# print(str(i) + " " + str(j) + " " + str(count))
+			fitness += ((A if g[i,j] else C) - count)**2
+	return fitness - (1-DEG)**2 * SIZE
+
+def fast_eval(graph):
+	# tr((2J - A - A^2)^2)
+	g = nx.to_numpy_matrix(graph)
+	j = np.ones((SIZE,SIZE))
+	j2 = np.add(j, j)
+	g2 = np.matmul(g, g)
+	added = np.subtract(np.subtract(j2,g), g2)
+	return np.trace(np.matmul(added, added)) - (1-DEG)**2 * SIZE
 
 # evaluate strong reularity (99,14,1,2)
 # but using a graph and its commonNeighbours matrix
@@ -180,6 +193,77 @@ def split_reproduce(first, second, fe, se):
 
 	return nx.from_numpy_matrix(r)
 
+def ordered_split_reproduce(first, second, fe, se):
+	a = nx.to_numpy_matrix(first)
+	b = nx.to_numpy_matrix(second)
+	r = nx.Graph()
+	r.add_nodes_from(list(range(99)))
+
+	diff = fe - se
+
+	# scale difference to range 0-33
+	diff = -1 * diff / 500 * 33
+
+	# generate random normal number 
+	split = int(np.random.normal(49 + diff, 5))
+	# print(split)
+
+	# copy the edges from each side of the cut
+	for i in range(split):
+		for j in range(i + 1, split):
+			if (i,j) in list(r.edges):
+				continue
+			if a[i,j]:
+				r.add_edge(i,j)
+
+	for i in range(split,99):
+		for j in range(i + 1,99):
+			if (i,j) in list(r.edges):
+				continue
+			if b[i,j]:
+				r.add_edge(i,j)
+
+	# list(set()) to remove duplicates
+	poss = list(set(list(first.edges) + list(second.edges)))
+
+	# extract edges crossing the cut from both parents
+	# bools x != y is just x xor y
+	poss = list(filter(lambda x: (x[0] < split) != (x[1] < split), poss))
+
+	random.shuffle(poss)
+
+	deg = r.degree
+
+	for x,y in poss:
+		e = (x,y)
+		if e in list(r.edges):
+			continue
+		if deg[x] >= 14 or deg[y] >= 14:
+			continue
+		r.add_edge(x,y)
+
+	# add other edges that are crossing the cut
+	rest = []
+	for i in range(SIZE):
+		for j in range(i + 1, SIZE):
+			rest.append((i,j))
+	
+	# find all possible edges that cross the cut
+	# and remove all the ones we've already tried
+	rest = list(filter(lambda x: (x[0] < split) != (x[1] < split), rest))
+	rest = list(set(poss) - set(rest))
+
+	for x,y in rest:
+		e = (x,y)
+		if e in list(r.edges):
+			continue
+		if deg[x] >= 14 or deg[y] >= 14:
+			continue
+		r.add_edge(x,y)
+
+	
+
+	return r
 
 # returns matrix with the number of common neighbours
 # for each pair of vertices
@@ -261,4 +345,6 @@ def test():
 	print(worse)
 
 if __name__ == "__main__":
-	test()
+	g = nx.random_regular_graph(14,99)
+	h = nx.random_regular_graph(14,99)
+	ordered_split_reproduce(g,h, fast_eval(g), fast_eval(h))
