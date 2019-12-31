@@ -197,28 +197,33 @@ def ordered_split_reproduce(first, second, fe, se):
 	a = nx.to_numpy_matrix(first)
 	b = nx.to_numpy_matrix(second)
 	r = nx.Graph()
-	r.add_nodes_from(list(range(99)))
+	r.add_nodes_from(list(range(SIZE)))
 
 	diff = fe - se
 
 	# scale difference to range 0-33
-	diff = -1 * diff / 500 * 33
+	diff = -1 * diff / 1500 * 33
+	# print('d: ' + str(diff))
 
 	# generate random normal number 
-	split = int(np.random.normal(49 + diff, 5))
-	# print(split)
+	split = int(np.random.normal(49 + diff, 3))
+	# print('s: ' + str(split))
+
+	# if the split is not in the range, reset it
+	while(split < 5 or split > 95):
+		split = int(np.random.normal(49 + diff, 3))
 
 	# copy the edges from each side of the cut
 	for i in range(split):
 		for j in range(i + 1, split):
-			if (i,j) in list(r.edges):
+			if (i,j) in r.edges:
 				continue
 			if a[i,j]:
 				r.add_edge(i,j)
 
-	for i in range(split,99):
-		for j in range(i + 1,99):
-			if (i,j) in list(r.edges):
+	for i in range(split,SIZE):
+		for j in range(i + 1,SIZE):
+			if (i,j) in r.edges:
 				continue
 			if b[i,j]:
 				r.add_edge(i,j)
@@ -232,13 +237,11 @@ def ordered_split_reproduce(first, second, fe, se):
 
 	random.shuffle(poss)
 
-	deg = r.degree
-
 	for x,y in poss:
 		e = (x,y)
-		if e in list(r.edges):
+		if e in r.edges:
 			continue
-		if deg[x] >= 14 or deg[y] >= 14:
+		if r.degree[x] >= 14 or r.degree[y] >= 14:
 			continue
 		r.add_edge(x,y)
 
@@ -251,17 +254,45 @@ def ordered_split_reproduce(first, second, fe, se):
 	# find all possible edges that cross the cut
 	# and remove all the ones we've already tried
 	rest = list(filter(lambda x: (x[0] < split) != (x[1] < split), rest))
-	rest = list(set(poss) - set(rest))
+	rest = list(set(rest) - set(poss))
 
 	for x,y in rest:
 		e = (x,y)
-		if e in list(r.edges):
+		if e in r.edges:
 			continue
-		if deg[x] >= 14 or deg[y] >= 14:
+		if r.degree[x] >= 14 or r.degree[y] >= 14:
 			continue
 		r.add_edge(x,y)
 
-	
+	# populate using other edges
+	# this part is ordered so as to fail less
+	# order by how many edges are missing
+	# then get first from list, and add an edge from that to some random edge
+	# (vertex number, edges needed)
+
+	need = []
+	for v in range(SIZE):
+		if r.degree[v] == 14:
+			continue
+		need.append((v, 14-r.degree[v]))
+	need = list(sorted(need, key = lambda g: -g[1]))
+
+	while len(need) > 0:
+		# print(need)
+		v1 = need[0]
+		poss = list(filter(lambda g: (v1[0],g[0]) not in r.edges and v1[0] != g[0], need))
+		# print(poss)
+		if len(poss) == 0:
+			return -1 # failed :(
+		v2 = random.choice(poss)
+		r.add_edge(v1[0],v2[0])
+		need.remove(v1)
+		need.remove(v2)
+		if v1[1] > 1:
+			need.append((v1[0], v1[1] - 1))
+		if v2[1] > 1:
+			need.append((v2[0], v2[1] - 1))
+		need = list(sorted(need, key = lambda g: -g[1]))
 
 	return r
 
@@ -307,6 +338,7 @@ def mutate(graph):
 # verify 14-regularity
 def verify(g):
 	r = nx.degree_histogram(g)
+	# print(r)
 	if len(r) == 15 and r[14] == 99:
 		return True
 	return False

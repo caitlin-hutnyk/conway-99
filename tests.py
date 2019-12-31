@@ -67,6 +67,22 @@ def allPaired():
 12.62
 14.62
 '''
+
+def new_rep_test():
+    fail = 0
+    succeed = 0
+    for i in range(100):
+        x = nx.random_regular_graph(14,99)
+        y = nx.random_regular_graph(14,99)
+        z = graph.ordered_split_reproduce(x,y,graph.fast_eval(x), graph.fast_eval(y))
+        print(z)
+        if z == -1:
+            fail += 1
+        else:
+            succeed += 1
+    print(fail)
+    print(succeed)
+
 def gaptest():
     two = 0
     three = 0
@@ -93,7 +109,6 @@ def gaptest():
     print(four)
     print(five)
 
-
 def main():
     i = 0.98
     while i >= 0.90:
@@ -101,7 +116,7 @@ def main():
         for j in range(10):
             print(j)
             g = nx.random_regular_graph(14,99)
-            g, t = sim_anneal.sim_anneal(g, 80, 3, i, 3, True)
+            g, t = sim_anneal.sim_anneal(g, 100, 1, i, 2, True)
             values.append(t)
         avg = []
         times = []
@@ -120,15 +135,29 @@ def main():
             plt.plot(list(range(len(j))), j)
         plt.ylabel('fitness')
         plt.xlabel('steps')
-        plt.savefig('sim_anneal_tests/' + str(i) + '-all.png')
+        plt.savefig('sim_anneal_tests/improved/' + str(i) + '-all.png')
         plt.close()
         plt.plot(list(range(len(avg))), avg)
         plt.ylabel('fitness')
         plt.xlabel('steps')
-        plt.savefig('sim_anneal_tests/' + str(i) + '-avg.png')
+        plt.savefig('sim_anneal_tests/improved/' + str(i) + '-avg.png')
         plt.close()
         print(i)
         i -= 0.01
 
 if __name__ == "__main__":
-    gaptest()   
+    success = 0
+    fail = 0
+    for i in range(500):
+        x = nx.random_regular_graph(14,99)
+        y = nx.random_regular_graph(14,99)
+        z = graph.ordered_split_reproduce(x,y,graph.fast_eval(x), graph.fast_eval(y))
+        if z == -1:
+            continue
+        test = graph.verify(z)
+        if test:
+            success += 1
+        else:
+            fail += 1
+    print(success)
+    print(fail)

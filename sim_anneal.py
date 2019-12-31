@@ -94,18 +94,18 @@ def step(graph, n):
 # how many disjoint pairs to pick when stepping
 # testing is a boolean to say whether to return the values array
 def sim_anneal(g, t, ft, a, s, testing):
-	val = graph.eval(g)
+	val = graph.fast_eval(g)
 	values = [val]
 	while t >= ft:
 		gs = step(g, s)
-		d = graph.eval(gs) - val
-		if d > 0:
+		d = graph.fast_eval(gs) - val
+		if d <= 0:
 			g = gs
 			val = val + d
 		
 		else:
 			# print(math.exp(d/t))
-			if random.random() < math.exp(d / t):
+			if random.random() < math.exp(-d / t):
 				g = gs
 				val += d
 		

@@ -1,0 +1,352 @@
+D:\Comp stuff\conway-99>python evolve.py
+running generation 0
+top two: -4010, -4026
+average fitness: -4171.75
+
+
+
+running generation 1
+top two: -3982, -4010
+average fitness: -4110.0
+
+
+
+running generation 2
+top two: -3982, -4010
+average fitness: -4092.699999999999
+
+
+
+running generation 3
+top two: -3982, -4010
+average fitness: -4083.3999999999996
+
+
+
+running generation 4
+top two: -3982, -4010
+average fitness: -4075.8499999999995
+
+
+
+running generation 5
+top two: -3982, -4010
+average fitness: -4061.35
+
+
+
+running generation 6
+top two: -3982, -4010
+average fitness: -4056.1
+
+
+
+running generation 7
+top two: -3964, -3982
+average fitness: -4042.9500000000007
+
+
+
+running generation 8
+top two: -3964, -3982
+average fitness: -4038.750000000001
+
+
+
+running generation 9
+top two: -3964, -3982
+average fitness: -4036.3
+
+
+
+running generation 10
+top two: -3964, -3982
+average fitness: -4034.2
+
+
+
+running generation 11
+top two: -3964, -3982
+average fitness: -4028.3999999999996
+
+
+
+running generation 12
+top two: -3964, -3980
+average fitness: -4024.2500000000005
+
+
+
+running generation 13
+top two: -3964, -3980
+average fitness: -4019.6
+
+
+
+running generation 14
+top two: -3964, -3980
+average fitness: -4017.6999999999994
+
+
+
+running generation 15
+top two: -3964, -3980
+average fitness: -4017.599999999999
+
+
+
+running generation 16
+top two: -3964, -3980
+average fitness: -4016.949999999999
+
+
+
+running generation 17
+top two: -3964, -3972
+average fitness: -4012.8499999999995
+
+
+
+running generation 18
+top two: -3964, -3972
+average fitness: -4010.5500000000006
+
+
+
+running generation 19
+top two: -3964, -3972
+average fitness: -4005.550000000001
+
+
+
+running generation 20
+top two: -3964, -3972
+average fitness: -4002.8000000000015
+
+
+
+running generation 21
+top two: -3964, -3972
+average fitness: -4000.400000000001
+
+
+
+running generation 22
+top two: -3926, -3942
+average fitness: -3994.000000000001
+
+
+
+running generation 23
+top two: -3926, -3942
+average fitness: -3992.05
+
+
+
+running generation 24
+top two: -3926, -3942
+average fitness: -3990.8
+
+
+
+running generation 25
+top two: -3926, -3942
+average fitness: -3989.8
+
+
+
+running generation 26
+top two: -3926, -3942
+average fitness: -3989.45
+
+
+
+running generation 27
+top two: -3926, -3942
+average fitness: -3989.45
+
+
+
+running generation 28
+top two: -3926, -3942
+average fitness: -3988.7499999999995
+
+
+
+running generation 29
+top two: -3926, -3942
+average fitness: -3988.3999999999996
+
+
+
+running generation 30
+top two: -3926, -3942
+average fitness: -3987.6
+
+
+
+running generation 31
+top two: -3926, -3942
+average fitness: -3987.6
+
+
+
+running generation 32
+top two: -3926, -3942
+average fitness: -3986.5499999999997
+
+
+
+running generation 33
+top two: -3926, -3942
+average fitness: -3985.8999999999996
+
+
+
+running generation 34
+top two: -3926, -3942
+average fitness: -3985.35
+
+
+
+running generation 35
+top two: -3926, -3942
+average fitness: -3984.8499999999995
+
+
+
+running generation 36
+top two: -3926, -3942
+average fitness: -3984.8499999999995
+
+
+
+running generation 37
+top two: -3926, -3942
+average fitness: -3983.999999999999
+
+
+
+running generation 38
+top two: -3926, -3942
+average fitness: -3983.999999999999
+
+
+
+running generation 39
+top two: -3926, -3942
+average fitness: -3983.8999999999987
+
+
+
+running generation 40
+top two: -3926, -3942
+average fitness: -3982.6999999999985
+
+
+
+running generation 41
+top two: -3926, -3942
+average fitness: -3981.799999999999
+
+
+
+running generation 42
+top two: -3926, -3936
+average fitness: -3980.249999999999
+
+
+
+running generation 43
+top two: -3926, -3936
+average fitness: -3980.249999999999
+
+
+
+running generation 44
+top two: -3926, -3936
+average fitness: -3980.249999999999
+
+
+
+running generation 45
+top two: -3926, -3936
+average fitness: -3979.5999999999995
+
+
+
+running generation 46
+top two: -3926, -3936
+average fitness: -3977.0000000000005
+
+
+
+running generation 47
+top two: -3926, -3936
+average fitness: -3975.700000000001
+
+
+
+running generation 48
+top two: -3926, -3936
+average fitness: -3975.6500000000015
+
+
+
+running generation 49
+top two: -3926, -3936
+average fitness: -3975.3000000000015
+
+
+
+running generation 50
+top two: -3926, -3936
+average fitness: -3975.3000000000015
+
+
+
+running generation 51
+top two: -3926, -3936
+average fitness: -3975.2000000000016
+
+
+
+running generation 52
+top two: -3926, -3936
+average fitness: -3975.2000000000016
+
+
+
+running generation 53
+top two: -3926, -3936
+average fitness: -3975.1500000000015
+
+
+
+running generation 54
+top two: -3926, -3936
+average fitness: -3973.9000000000015
+
+
+
+running generation 55
+top two: -3926, -3936
+average fitness: -3973.9000000000015
+
+
+
+running generation 56
+top two: -3926, -3936
+average fitness: -3973.3500000000017
+
+
+
+running generation 57
+top two: -3926, -3936
+average fitness: -3973.3500000000017
+
+
+
+running generation 58
+top two: -3926, -3936
+average fitness: -3972.6500000000015

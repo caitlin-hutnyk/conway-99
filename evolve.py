@@ -14,9 +14,9 @@ def run_2(gens, size):
 	pop = []
 	for i in range(size):
 		g = nx.random_regular_graph(14,99)
-		g = sim_anneal.sim_anneal(g, 80, 3, 0.98, 2, False)
-		pop.append((g, graph.eval(g)))
-	pop = sorted(pop, key = lambda g : - g[1])
+		g = sim_anneal.sim_anneal(g, 100, 1, 0.98, 2, False)
+		pop.append((g, graph.fast_eval(g)))
+	pop = sorted(pop, key = lambda g : g[1])
 	avgFitness = []
 	bestFitness = []
 	for gen in range(gens):
@@ -38,13 +38,13 @@ def run_2(gens, size):
 			a = random.choice(pop)
 			b = random.choice(pop)
 			try:
-				c = graph.split_reproduce(a[0], b[0], a[1], b[1])
-				c = sim_anneal.sim_anneal(c, 80, 3, 0.98, 2, False)
-				temp_pop.append((c, graph.eval(c)))
+				c = graph.ordered_split_reproduce(a[0], b[0], a[1], b[1])
+				c = sim_anneal.sim_anneal(c, 100, 1, 0.98, 2, False)
+				temp_pop.append((c, graph.fast_eval(c)))
 			except:
 				continue
 		temp_pop.extend(pop)
-		temp_pop = sorted(temp_pop, key = lambda g : - g[1])
+		temp_pop = sorted(temp_pop, key = lambda g : g[1])
 		pop = temp_pop[:40]
 
 def generation(graphs):
@@ -92,7 +92,7 @@ def run(gens):
 	for i in range(100):
 		g = nx.random_regular_graph(14,99)
 		pop.append((g, graph.eval(g)))
-	pop = sorted(pop, key = lambda g : - g[1])
+	pop = sorted(pop, key = lambda g : g[1])
 	avgFitness = []
 	bestFitness = []
 
