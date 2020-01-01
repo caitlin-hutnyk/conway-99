@@ -14,11 +14,34 @@ def run_2(gens, size):
 	pop = []
 	for i in range(size):
 		g = nx.random_regular_graph(14,99)
-		g = sim_anneal.sim_anneal(g, 100, 1, 0.98, 2, False)
 		pop.append((g, graph.fast_eval(g)))
-	pop = sorted(pop, key = lambda g : g[1])
+
+	# see average for ones without local search
+
 	avgFitness = []
 	bestFitness = []
+
+	avg = 0
+	for g in pop:
+		avg += g[1] / size
+
+	pop = sorted(pop, key = lambda g : g[1])
+
+	avgFitness.append(avg)
+	bestFitness.append(pop[0][1])
+
+	newpop = []
+
+	# run local search on each, and include as another gen
+
+	for g in pop:
+		g2 = sim_anneal.sim_anneal(g[0], 100, 1, 0.98, 2, False)
+		newpop.append((g2,graph.fast_eval(g2)))
+
+	pop = newpop
+
+	pop = sorted(pop, key = lambda g : g[1])
+
 	for gen in range(gens):
 		print('running generation ' + str(gen))
 		print('top two: ' + str(pop[0][1]) + ', ' + str(pop[1][1]))
@@ -45,7 +68,17 @@ def run_2(gens, size):
 				continue
 		temp_pop.extend(pop)
 		temp_pop = sorted(temp_pop, key = lambda g : g[1])
-		pop = temp_pop[:40]
+		pop = temp_pop[:size]
+
+	plt.plot(np.arange(len(bestFitness)), bestFitness)
+	plt.plot(np.arange(len(avgFitness)), avgFitness)
+	plt.legend(['best fitness', 'average fitness'])
+	plt.xlabel('Generations')
+	plt.ylabel('Fitness')
+	plt.savefig('results.png')
+	with open('results.pickle', 'wb') as f:
+		pickle.dump(pop, f, protocol=pickle.HIGHEST_PROTOCOL)
+	plt.show()
 
 def generation(graphs):
 	n = []
@@ -125,4 +158,4 @@ def run(gens):
 	plt.show()
 	
 if __name__ == "__main__":
-	run_2(200, 40)
+	run_2(500, 50)

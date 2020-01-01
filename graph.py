@@ -283,7 +283,7 @@ def ordered_split_reproduce(first, second, fe, se):
 		poss = list(filter(lambda g: (v1[0],g[0]) not in r.edges and v1[0] != g[0], need))
 		# print(poss)
 		if len(poss) == 0:
-			return -1 # failed :(
+			raise Exception('Failed to reproduce')
 		v2 = random.choice(poss)
 		r.add_edge(v1[0],v2[0])
 		need.remove(v1)
