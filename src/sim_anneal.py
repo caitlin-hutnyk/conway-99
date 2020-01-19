@@ -115,3 +115,12 @@ def sim_anneal(g, t, ft, a, s, testing):
 	if testing:
 		return (g,values)
 	return g
+
+if __name__ == "__main__":
+	x = nx.random_regular_graph(14,99)
+	x, t = sim_anneal(x, 300, 0.000000000000000000000001, 0.9999, 2, True)
+	plt.plot(list(range(len(t))), t)
+	plt.ylabel('fitness')
+	plt.xlabel('steps')
+	plt.savefig('sim_results2.png')
+	plt.show()

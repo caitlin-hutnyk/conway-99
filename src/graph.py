@@ -30,7 +30,7 @@ def fast_eval(graph):
 	j2 = np.add(j, j)
 	g2 = np.matmul(g, g)
 	added = np.subtract(np.subtract(j2,g), g2)
-	return np.trace(np.matmul(added, added)) - (1-DEG)**2 * SIZE
+	return np.trace(np.matmul(added, added)) - (2-DEG)**2 * SIZE
 
 # evaluate strong reularity (99,14,1,2)
 # but using a graph and its commonNeighbours matrix
